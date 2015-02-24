@@ -1,0 +1,30 @@
+module hex_to_bcd_converter (input wire clk, reset, input wire [31:0] hex_number, output reg [3:0] bcd_digit_0, bcd_digit_1, bcd_digit_2, bcd_digit_3, bcd_digit_4, bcd_digit_5, bcd_digit_6, bcd_digit_7) ;
+
+reg [31:0] st1,st2, st3, st4, st5, st6, st0
+
+always@(postedge clk,postedge reset)
+		if (reset)
+			bcd_digit_0 =0;
+			bcd_digit_1 =0;
+			bcd_digit_2 = 0
+			bcd_digit_3 = 0;
+			bcd_digit_4 =0;
+			bcd_digit_5 = 0;
+			bcd_digit_6 = 0;
+		else
+			bcd_digit_0 = hex_number%10;
+			st0 = hex_number/10;
+			bcd_digit_1 = st0%10;
+			st1 = st0/10;
+			bcd_digit_2 = st1%10;
+			st2 = st1 /10;
+			bcd_digit_3= st2%10;
+			st3 = st2 /10;
+			bcd_digit_4= st3%10;
+			st4 = st3 /10;
+			bcd_digit_5= st4%10;
+			st5 = st4/10;
+			bcd_digit_6= st5%10;
+			st6 = st5/10;
+			bcd_digit_7= st6%10;
+endmodule

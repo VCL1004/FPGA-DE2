@@ -1,0 +1,43 @@
+module clock_divider (input wire clock,reset,output wire clk_en);
+	reg [31:0] Q1 ;
+	reg [31:0] Q2, Q3,D1;
+	wire [0:1] count;ENA
+	integer [31:0]DATAB;
+	wire[31:0] DATAA ;
+	
+initial
+begin
+	Q1 = 0;
+	DATAA = 0;
+end
+assign count = (Q1<32’h000061A7) ? 2’b0 : 2’b1;
+assign DATAB = Q1 + 32’h000001
+always @(*)
+		if(count ==1)
+			D1 = 0
+		else
+			D1 = DATAB
+always@(postedge clk , postedge reset)
+		if (reset)
+			Q1 = 0;
+		else 
+			Q1 <= D1;
+		If(Q1 == 0)
+			ENA = 1;
+		else
+			ENA = 0;
+always@(postedge clk, postedge reset)
+		if (reset)
+			Q2 <= 1;
+		elseif(ENA)
+			Q2 <= D2;
+		Else
+			D 2<= ~Q2
+always@(postedge clk, postedge reset)
+		D3 = Q2;
+		if (reset)
+			Q3 <= 1;
+		else
+			Q3 <= D
+assign clk_en = ~Q3 & Q2
+endmodule

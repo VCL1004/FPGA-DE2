@@ -1,0 +1,14 @@
+module counter (input wire clk,ENA,input [17:0]SW, ouput wire [31:0] count)
+	reg [31:0] Q,D
+	wire[31:0] num;
+	assign num =(SW[0] != 0) ? 32’b01:32’b00 ;
+	always@(postedge clk, SW[1])
+		if(SW[1])
+			Q<=0;
+		else
+			Q<=D;
+	always@(postedge clk & ENA)
+			D = Q+num;
+	always@(*)
+		count = Q;
+endmodule

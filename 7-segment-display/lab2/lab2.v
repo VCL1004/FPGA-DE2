@@ -1,0 +1,23 @@
+module lab2 (input clk, input [17:0] SW, output wire [7:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6,HEX7);
+	wire clk_en;
+	wire [31:0] num;
+	wire [3:0] bcd0, bcd1, bcd2, bcd3, bcd4, bcd5, bcd6,bcd7;
+	clock_divider DIV (.clock(clk), .reset(SW[1]), .clk_en(clk_en));
+	counter CUN (.clk(clk), .ENA (clk_en), .SW(SW), .count(num));
+	hex_to_bcd_converter CON (.clk(clk), .reset(SW[2]), .hex_number(num),
+                           . bcd_digit_0(bcd0), . bcd_digit_1(bcd1),
+									. bcd_digit_2(bcd2), . bcd_digit_3(bcd3),
+									. bcd_digit_4(bcd4), . bcd_digit_5(bcd5),
+									. bcd_digit_6(bcd6), . bcd_digit_7(bcd7));
+
+	seven_seg_decoder( .x(bcd0), .hex_LEDs(HEX0));
+	seven_seg_decoder( .x(bcd1), .hex_LEDs(HEX1));
+	seven_seg_decoder( .x(bcd2), .hex_LEDs(HEX2));
+	seven_seg_decoder( .x(bcd3), .hex_LEDs(HEX3));
+	seven_seg_decoder( .x(bcd4), .hex_LEDs(HEX4));
+	seven_seg_decoder( .x(bcd5), .hex_LEDs(HEX5));
+	seven_seg_decoder( .x(bcd6), .hex_LEDs(HEX6));
+	seven_seg_decoder( .x(bcd7), .hex_LEDs(HEX7));
+
+endmodule
+
