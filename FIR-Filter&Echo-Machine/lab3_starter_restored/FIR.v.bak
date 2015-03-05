@@ -1,0 +1,87 @@
+module FIR (input clk, input reset, input wire[15:0]input_signal, output reg[15:0]output_signal);
+
+parameter N=16;
+reg signed[20:0] coeffs[16:0];
+reg [15:0] hold[15:0];
+wire [15:0] Add[15:0];
+genvar i;
+
+always@(*)
+begin
+	 coeffs[0]=1;
+    coeffs[1]=1;
+    coeffs[2]=1;
+    coeffs[3]=1;
+    coeffs[4]=1;
+    coeffs[5]=1;
+    coeffs[6]=1;
+    coeffs[7]=1;
+    coeffs[8]=1;
+    coeffs[9]=1;
+    coeffs[10]=1;
+    coeffs[11]=1;
+    coeffs[12]=1;
+	 coeffs[13]=1;
+	 coeffs[14]=1;
+	 coeffs[15]=1;
+end 
+
+generate
+for(i=0; i<N; i=i+1)
+begin : m
+	multiplier mult(.dataa(coeffs[i]), .datab(hold[i]), .result(Add[i]));
+end
+endgenerate
+
+always @(posedge clk or posedge reset)
+begin
+    if(reset)
+        begin
+				hold[15]    <= 0;
+				hold[14]    <= 0;
+				hold[13]    <= 0;
+            hold[12]    <= 0;
+            hold[11]    <= 0;
+            hold[10]    <= 0;
+            hold[9]     <= 0;
+            hold[8]     <= 0;
+            hold[7]     <= 0;
+            hold[6]     <= 0;
+            hold[5]     <= 0;
+            hold[4]     <= 0;
+            hold[3]     <= 0;
+            hold[2]     <= 0;
+            hold[1]     <= 0;
+            hold[0]     <= 0;
+            output_signal       <= 0;
+        end
+    else
+        begin
+			   hold[15]    <= hold[14];
+				hold[14]    <= hold[13];
+				hold[13]    <= hold[12];
+            hold[12]    <= hold[11];
+            hold[11]    <= hold[10];
+            hold[10]    <= hold[9];
+            hold[9]     <= hold[8];
+            hold[8]     <= hold[7];
+            hold[7]     <= hold[6];
+            hold[6]     <= hold[5];
+            hold[5]     <= hold[4];
+            hold[4]     <= hold[3];
+            hold[3]     <= hold[2];
+            hold[2]     <= hold[1];
+            hold[1]     <= hold[0];
+            hold[0]     <= input_signal;
+            output_signal <= (input_signal + Add[0] + Add[1] + 
+                              Add[2] + Add[3] + Add[4] + Add[5] +
+                              Add[6] + Add[7] + Add[8] + Add[9] + 
+                              Add[10] + Add[11] + Add[12]+ Add[13]+
+										+ Add[14]+ Add[15]);
+        end
+end
+
+
+
+endmodule
+	

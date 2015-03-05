@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="DE2_i2sound">
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[0].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[17].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[8].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[10].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[18].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[1].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[9].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[11].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[19].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[20].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[2].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[12].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[16].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[21].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[3].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[7].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[13].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[22].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[4].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[14].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[23].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[5].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[15].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|FIR:test|multiplier:m[6].mult|multi:mui|lpm_mult:lpm_mult_component" CBX_FILE_NAME="mult_34n.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|echo:ec|div:divider|lpm_divide:LPM_DIVIDE_component" CBX_FILE_NAME="lpm_divide_86s.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|system|dsp_subsystem:dsp_instance|echo:ec|shiftregister:SR|altshift_taps:ALTSHIFT_TAPS_component" CBX_FILE_NAME="shift_taps_a0v.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

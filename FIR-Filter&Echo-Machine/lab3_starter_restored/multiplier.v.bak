@@ -1,0 +1,10 @@
+module multiplier (dataa,datab,out);
+input [15:0]dataa;
+input [15:0]datab;
+reg [31:0]result;
+output[15:0]out;
+always@(*)begin
+    result = dataa*datab;
+end
+assign out = result[31:16]; 
+endmodule

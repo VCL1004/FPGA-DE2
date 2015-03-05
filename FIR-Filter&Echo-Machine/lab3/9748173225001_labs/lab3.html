@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>Untitled document</title>
+</head>
+<body>
+<p></p>
+<!--HEVEA command line is: hevea lab3 -->
+<p></p>
+<!--CUT DEF section 1 -->
+<div class="center"><b><span style="font-size: 18pt;">Mechtron 3TB4: Embedded Systems Design II<br /> Lab&nbsp;3</span></b><br /> <b>Digital Signal Processing on FPGAs</b><br /> Reports Due:<br /> <strong>Part&nbsp;1: the start of your session on March 4th or 5th.</strong><br /><strong> Part&nbsp;2: the start of your session on March 11th or 12th</strong></div>
+<p><b>Goals:</b></p>
+<ul class="itemize">
+<li class="li-itemize">To apply your theoretical knowledge of FIR filter design to a practical design</li>
+<li class="li-itemize">To learn how to use an FPGA to implement digital signal processing systems</li>
+<li class="li-itemize">To learn how to use Quartus II Library of Parameterizable Modules (LPMs)</li>
+<li class="li-itemize">To practice your Verilog skills by implementing a more complex design</li>
+</ul>
+<p><b>Note:</b> This lab consists of three (3) activities. Marks allocated to each are indicated in square brackets.<br />The following documents may help you with your lab. Please go over them at your own convenient time, in addition to the class notes:</p>
+<ul class="itemize">
+<li class="li-itemize"><a href="http://www.dspguide.com/ch6/2.htm"><tt>http://www.dspguide.com/ch6/2.htm</tt></a></li>
+<li class="li-itemize"><a href="http://www.pearson.ch/download/media/9780131089891.pdf"><tt>http://www.pearson.ch/download/media/9780131089891.pdf</tt></a></li>
+<li class="li-itemize"><a href="ftp://ftp.altera.com/up/pub/Altera_Material/12.0/Tutorials/Verilog/Quartus_II_Introduction.pdf" target="_self">ftp://ftp.altera.com/up/pub/Altera_Material/12.0/Tutorials/Verilog/Quartus_II_Introduction.pdf</a> (Check Chapter 8 for Simulations using QSim)</li>
+</ul>
+<p>In this lab you will design two simple DSP systems: FIR filter and echo machine. You will use Matlab to determine coefficients for your FIR filter. You will then describe the FIR filter and the echo machine in Verilog and implement them in an FPGA on the DE2 development board. You will use the FIR filter to filter out noise from a sample waveform file. You will also explore the parameters of the echo machine and observe how they affect the output.</p>
+<p>As part of this lab, you will use the audio codec chip on the DE2 board, to demonstrate the use of digital signal processing systems. You will also use Matlab to determine coefficients for the FIR filter that you will build in the lab.</p>
+<p>The DE2 board contains an audio codec chip, which contains A/D and D/A converters. An analog audio signal from line-in or microphone inputs on the DE2 board can be converted to digital form using the A/D converter, and brought to the FPGA for processing. The processed digital signal can then be sent from the FPGA to the codec to be converted to analog signal using the D/A converter and sent to the line-out output of the board. You will be provided with an interface to the codec chip and will be required to read the digital data the chip presents to you, process it using an appropriate circuit, and send it back to the codec chip.</p>
+<dl class="description"><dt class="dt-description"><b>System Description:</b></dt><dd class="dd-description">The system you are building is shown in Figure <a href="#lab4f11">1 System Block Diagramfigure.</a>. You are provided with a Quartus II starter project which already contains the interface to the codec and an empty module that serves as a placeholder for your design. Top-level system is described in <i>system.v</i>Verilog file. You should NOT modify this file. System&rsquo;s components are described in the following sections.
+<blockquote class="figure">
+<div class="center">
+<div class="center"><hr size="2" width="80%" /></div>
+<img src="../figures/DSPLabFPGA.png" />
+<div class="caption">
+<table cellpadding="0" cellspacing="6">
+<tbody>
+<tr>
+<td align="left" valign="top">Figure 1: <a name="lab4f11"></a>System Block Diagram</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="center"><hr size="2" width="80%" /></div>
+</div>
+</blockquote>
+</dd><dt class="dt-description"><b>Interface to the Codec:</b></dt><dd class="dd-description">A simple interface to the audio codec chip on the DE2 board is provided for you, so that you do not have to deal with low-level details of the chip configuration and data handling. The interface sets the configuration of the codec chip as follows:
+<ul class="itemize">
+<li class="li-itemize">Sampling frequency: 8kHz</li>
+<li class="li-itemize">Sample data-width: 16 bit, signed (2&rsquo;s complement) numbers</li>
+</ul>
+The interface also selects an input source and controls volume of the output. The volume can be adjusted using the push-button KEY[0]. Pressing this button increases the counter that controls the volume. Once the counter reaches its maximum value it overflows and the volume drops to 0. The system can be reset using the switch SW[3]. Resetting the system sets the volume to the default (low) value. Input source can be selected between line-in and microphone. This selection is controlled by SW[2]. When SW[2] is in the off (0) position, line-in is selected, otherwise the microphone is selected.
+<p>The interface presents samples as 16-bit signed numbers. A new sample is available on every positive edge of the signal <i>sample_clock</i>. Your circuit (DSP subsystem) should process the sample and send it to the output on the next positive edge of <i>sample_clock</i> for the FIR filter, or a number of clock cycles later for the echo machine. In either case, you should send one sample per clock cycle to the output.</p>
+</dd><dt class="dt-description"><b>DSP Subsystem:</b></dt><dd class="dd-description">DSP subsystem is contained in the <i>dsp_subsystem.v</i>Verilog file. You should instantiate all sub-modules you need inside of this module. You are free (and encouraged) to create new Verilog files to describe parts of your system.
+<p>When you open <i>dsp_subsystem.v</i> you will notice that the output is directly connected to the input, which means that samples are simply forwarded to the output, without any processing. If you compile this project and download it to the DE2 board, you should be able to hear yourself when microphone is selected, and hear whatever is on the line-in input when line-in is selected by switch SW[2]. To complete the lab, you are required to implement an FIR filter and an echo machine. You will also create a multiplexer which will allow you to select what data gets sent to the output, as shown in Figure 2.</p>
+<blockquote class="figure">
+<div class="center">
+<div class="center"><hr size="2" width="80%" /></div>
+<img src="../figures/DSPLabBlockDiagram.png" />
+<div class="caption">
+<table cellpadding="0" cellspacing="6">
+<tbody>
+<tr>
+<td align="left" valign="top">Figure 2: <a name="lab4f12"></a>DSP Subsystem Block Diagram</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="center"><hr size="2" width="80%" /></div>
+</div>
+</blockquote>
+<p>Multiplexer can select between the original (unprocessed) signal, output of the FIR filter, or output of the echo machine. The select lines will be connected to the switches SW[1] and SW[0] of the DE2 board, so that you can control which signal is selected. Using a multiplexer in this fashion will help in debugging your circuit. For instance, if you can hear the sound coming from the FIR filter, but not the sound from the echo machine, that means you only need to fix the echo machine. On the other hand, if no sound can be heard regardless of the selected source, the problem might be in incorrectly plugged headphones or microphone, or too low volume setting.</p>
+</dd><dt class="dt-description"><b>FIR Filter:</b></dt><dd class="dd-description">In this part of the lab you will design an FIR filter that eliminates noise of a specific frequency. This will be the same filter whose coefficients you determined in the tutorial using Matlab. As discussed in the lectures, FIR filter consists of a number of registers, multipliers and adders. To make the design reusable, you will create a parameterizable FIR filter whose number of taps can be changed. To do this, you will require many wires to interconnect the modules. For example, each register outputs a 16-bit number. Therefore, if we have say 4 registers, there are 4 sets of 16-bit buses that need to be handled. To deal with this, you can declare an array of buses, as illustrated in the following code sample:
+<div class="lstlisting">module buses_2_d (input [7:0] a, input [7:0] b, input [1:0] sel,<br />output reg [7:0] result);<br />// PAY ATTENTION: THE NEXT LINE IS COUNTERINTUITIVE, BUT CORRECT!<br />wire [7:0] bus_2_d [3:0]; // declares four 8-bit buses<br /><br />assign bus_2_d[0] = a+b;<br />// the first 8-bit bus connects to the output of a+b<br />assign bus_2_d[1] = a-b;<br />// the second 8-bit bus connects to the output of a-b<br />assign bus_2_d[2] = b-a;<br />// the third 8-bit bus connects to the output of b-a<br />assign bus_2_d[3] = a*b;<br />// the fourth 8-bit bus connects to the output of a*b<br />// The following always block implements a multiplexer that selects<br />// among the four results<br />always @(*)<br />begin<br /> case (sel)<br /> 2'b00: result = bus_2_d[0];<br /> 2'b01: result = bus_2_d[1];<br /> 2'b10: result = bus_2_d[2];<br /> 2'b11: result = bus_2_d[3];<br /> endcase<br />end<br />endmodule</div>
+The above code implements the circuit shown in Figure <a href="#lab4f13">3 Circuits Produced by Verilog Codefigure</a>.<br />
+<blockquote class="figure">
+<div class="center">
+<div class="center"><hr size="2" width="80%" /></div>
+<img src="../figures/DSPLabRTL.png" />
+<div class="caption">
+<table cellpadding="0" cellspacing="6">
+<tbody>
+<tr>
+<td align="left" valign="top">Figure 3: <a name="lab4f13"></a>Circuits Produced by Verilog Code</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="center"><hr size="2" width="80%" /></div>
+</div>
+</blockquote>
+<p>Please note that the above code is just an illustration of how arrays of buses are declared and used. It does not otherwise reflect the FIR filter you should design.</p>
+</dd><dt class="dt-description"><b>Registers:</b></dt><dd class="dd-description">Registers can be built using behavioral description, as discussed in class. To create a number of registers that can be parameterizable, you can either use for loops, or create a separate module that describes a register, and then use a generate statement to create an appropriate number of instances of the register</dd><dt class="dt-description"><b>Multipliers:</b></dt><dd class="dd-description">To implement a multiplier, you will have to use one of the library components provided as a part of Quartus II Library of Parameterizable Modules (LPMs). LPM provides a way to implement many common digital circuit elements without having to specify their functionality. In addition, these modules are usually optimized for efficient implementation in FPGAs. To create a multiplier, follow these steps:<ol class="enumerate" type="1">
+<li class="li-enumerate">Select Tools MegaWizard Plug-In Manager</li>
+<li class="li-enumerate">A window will pop-up, with the text &ldquo;Create a new custom megafunction variation". Leave that text selected and click Next.</li>
+<li class="li-enumerate">In the next window on the left side you will find a list of different types of library modules. Click on the + sign next to the &ldquo;Arithmetic" category, and then select LPM_MULT. Under &ldquo;Which type of output do you want to create?" select &ldquo;Verilog HDL". Under &ldquo;What name do you want for the output file?" select <i>multiplier.v</i>. (Note that the <i>multiplier.v</i> file name is arbitrary, and you could use a different name). Click Next.</li>
+<li class="li-enumerate">Select widths of &lsquo;dataa&rsquo; and &lsquo;datab&rsquo; inputs to be 16 bits, because you will be multiplying two 16-bit numbers. Leave other options at their default values. Click Next.</li>
+<li class="li-enumerate">Under &ldquo;Does the &lsquo;datab&rsquo; input bus have a constant value?" leave the setting as &ldquo;No" (Although our multipliers will be used to multiply with a constant, you would have to specify each constant through this interface, which is not practical). Under &ldquo;Which type of multiplication do you want?" select &ldquo;Signed". Leave other options at their default values. Click Next.</li>
+<li class="li-enumerate">On the next two pages leave all options at their default values. Click Next twice, then click Finish.</li>
+<li class="li-enumerate">The multiplier module is created for you. To see it, you can open the newly created file <i>multiplier.v</i>. You should see a module called <i>multiplier</i>, which you can use (i.e. instantiate) like any other module. You should not change anything in the <i>multiplier.v</i> file. You should simply use the newly created module in your code where needed.<br /> You might be wondering why you cannot use the &ldquo;*" Verilog operator to implement multiplication. The answer is that the &ldquo;*" operator implements unsigned multiplication, whereas we need signed multiplication, because our samples and coefficients can be negative.</li>
+</ol></dd><dt class="dt-description"><b>Adders:</b></dt><dd class="dd-description">You can create an adder by using the Verilog &ldquo;+" operator. Unlike multiplication, addition is the same whether the input numbers are signed or unsigned, so the &ldquo;+" operator is sufficient.</dd><dt class="dt-description"><b>Coefficients:</b></dt><dd class="dd-description">To fully specify the FIR filter, all of its coefficients have to be specified. One simple way to declare all coefficients is to declare an array of buses and assign constant coefficients to them. This can be done either using an assign statement, or using an always block, in which case the array of buses has to be declared as <i>reg</i>type. The following example illustrates how one might specify four 8-bit coefficients:
+<div class="lstlisting">reg [7:0]coeffs[3:0];<br />always @(*)<br />begin<br />coeffs[0]= 7;<br />coeffs[1]= -6;<br />coeffs[2]= 17;<br />coeffs[3]= 0;<br />end</div>
+<p>Note that the numbers are specified as signed decimal numbers. Quartus will interpret them correctly and convert them into 2&rsquo;s complement binary numbers. However, you will get warning messages about truncated bits, because the plain numbers like this are considered to be 32 bits wide. You can safely ignore these messages, at least for these numbers.</p>
+<p>You will obtain correct values for coefficients from Matlab. Remember that you have to convert the coefficients into integers, and compensate for that after the multiplication, as discussed in class.</p>
+</dd><dt class="dt-description"><b>Echo Machine:</b></dt><dd class="dd-description">In this part of the lab you will design a simple echo machine. The basic idea is to delay the samples of an audio signal and then add them to the current samples, as shown in Figure (4a). In this design, only the original signal is stored in the delay line. Therefore, such a circuit would only achieve echo with constant delay. A better idea is to store the signal with echo into the delay line, which produces multiple echoes. This circuit is shown in Figure (4b). The problem with this design is that the samples get constantly added to existing ones, which eventually results in noise. To prevent that, the delayed component of the signal is divided by a constant factor, which produces a nice decaying echo of the input. This design is shown in Figure (4c).
+<blockquote class="figure">
+<div class="center">
+<div class="center"><hr size="2" width="80%" /></div>
+<img src="../figures/DSPLabEchoMachines.png" />
+<div class="caption">
+<table cellpadding="0" cellspacing="6">
+<tbody>
+<tr>
+<td align="left" valign="top">Figure 4: <a name="lab4f14"></a>Block Diagram of Three Echomachine Designs</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="center"><hr size="2" width="80%" /></div>
+</div>
+</blockquote>
+<p>Although division operation implemented in hardware can be quite expensive, recall that division by a number that is a power of 2 translates into a simple shift operation, so you should choose a division factor that is a power of 2 (i.e. 2, 4, 8, 16,...), and implement it using a shift operation. Do not forget that samples are signed numbers.</p>
+<p>To implement the delay, you could use a series of registers connected to one another. This configuration is known as shift-register. One problem with this approach is that it requires excessive amount of registers to implement an audible delay (you will calculate just how many registers are required as a part of your lab report). Since the FPGA you are using contains only 1 register per logic block, such an implementation could potentially use up all the resources on the FPGA. Therefore, an alternative has to be found. The FPGA you are using also contains memory blocks, which can be used to store samples. Quartus II LPM library contains a component that can implement a shift register using memory blocks. To find it, start the MegaWizard Plug-In Manager (<i>Tools</i>&rarr; <i>MegaWizard</i> <i>Plug</i>&minus;<i>In</i> <i>Manager</i>) and under category &ldquo;Memory Compiler", select &ldquo;Shift Register (RAM-based)". Specify a name for the module to be generated (e.g <i>shiftregister.v</i>) and specify that you wish to generate Verilog HDL output. On the next page select both input and output data widths to be 16 bits.</p>
+<p>The length of the shift register is specified in a rather peculiar way. There are two parameters offered to you: number of taps, and distance between the taps. The length of the shift register (i.e. the number of samples that will be stored in it) will be equal to the product of these two numbers. For example, the default values in those two fields are 32 and 8, which means that the shift register would contain 32*8 = 256 registers, and could therefore store 256 samples. It also means that it would take 256 clock cycles for the input to propagate to the output. Therefore, the delay that this shift register introduces would be 256 clock cycles. You should select these two numbers in such a way that they provide the delay you wish to achieve.</p>
+<p>Once you have created the memory-based shift register, open its Verilog file to see the module declaration. If you used the suggested name, the file you are looking for is <i>shiftregister.v</i>. You should not change anything in this file. You can now instantiate the shift-register module in your module that implements the echo machine. You will notice that the produced shift register module has an output called taps. We will not use this output, and you can safely omit it when you create an instance of this module (i.e. when creating an instance, simply do not include this port in the port list).</p>
+<p>Once you have the shift register, you just need to connect it appropriately to the divider and adder. Don&rsquo;t forget to implement the divider using a simple shift operation. The adder can be implemented using the &ldquo;+" Verilog operator.</p>
+</dd><dt class="dt-description"><b>Activities</b><b>:</b></dt><dd class="dd-description"></dd><dt class="dt-description"><b> </b><b>Pre-lab:</b></dt><dd class="dd-description">[30 marks]<br /> The following activities must be completed by each student <b>independently</b>and submitted as part&nbsp;1 of the lab report at the start of class on the day of the lab.<ol class="enumerate" type="1">
+<li class="li-enumerate">Considering that the sampling frequency is 8kHz, calculate the number of samples in a sound that lasts X milliseconds, where X is equal to the last two digits of your student number.</li>
+<li class="li-enumerate">Download the starter kit for lab 3 from the course web-site. The starter kit comes as a Quartus archive (.qar) file. The file can be opened by Quartus, at which point it expands into a full Quartus II project in a folder you specify. This project already contains the interface to the audio codec chip, and you should develop all your modules inside of this project. The top-level module for the whole system is <i>system.v</i>. You should not modify any existing files other than <i>dsp_subsystem.v</i>, but you are free (and encouraged) to create new files for your modules.</li>
+<li class="li-enumerate">Using Verilog HDL, design a 3-to-1 multiplexer that selects between three 16-bit inputs, as described in the lab description.</li>
+<li class="li-enumerate">Design a parameterizable FIR filter in Verilog HDL, as specified above. As a part of this, you should run the MegaWizard Plug-In Manager and create an instance of LPM_MULT library component, as specified in the lab description. Your FIR filter should have a parameter that specifies the number of taps. Set the default value for this parameter to 65 and initialize the coefficients based on the filter you developed during the tutorial. Don&rsquo;t forget to convert the coefficients to integers.</li>
+<li class="li-enumerate">Design an echo machine depicted in Figure (4c). As a part of this, you should run the MegaWizard Plug-In Manager and create an instance of the memory based shift register, as specified in the lab description. Shift-register delay can be changed later, so don&rsquo;t worry too much about selecting a specific value.</li>
+<li class="li-enumerate">Instantiate your FIR filter and the echo machine inside the <i>dsp_subsystem.v</i> file and connect them to the multiplexer, as depicted in Figure 2.</li>
+<li class="li-enumerate">Make sure that Quartus II compiles your design without any errors. Submit only the files you generated or modified as preparation. This, among other files, includes <i>multiplier.v</i> and <i>shiftregister.v</i>. Feel free to upload the whole project into a separate folder, so that you do not need to recreate the project in the lab.</li>
+</ol>
+<p>&nbsp;</p>
+</dd><dd class="dd-description"><b>In the Lab:&nbsp;</b>[50 marks]<br /> <b>WARNING:</b><br /> The volume on the DE2 board is set low by default to protect your hearing. Only increase the volume if necessary. The volume can be increased by pressing KEY[0]. Only increase the volume a little bit at a time. In case you hear a loud noise coming out of the headset, promptly remove the headset. The system, including the volume can be reset by turning the switch SW[3] on. <b>Reset the volume before playing the sound sample, and keep the headset off when you first play it</b>. If your filter does not work, having the volume set on high <b>may damage your hearing!</b></dd><dd class="dd-description"><ol class="enumerate" type="1">
+<li class="li-enumerate">Implement your circuit on the DE2 board</li>
+<li class="li-enumerate">Test the functionality of your FIR filter by playing the sample with the noise and listening to the output. <b>Keep the volume low, and only increase it if necessary!</b></li>
+<li class="li-enumerate">Test the functionality of your echo machine. Experiment with the delay duration (i.e. shift-register length) and the division factor until you achieve an interesting effect. You may ask TAs for the &ldquo;order of magnitude" guidelines in choosing these numbers.</li>
+<li class="li-enumerate">If either of your circuits does not work, debug it using simulation. You may also want to use the RTL Viewer (<i>Tools</i>&rarr; <i>Netlist</i> <i>Viewers</i>&rarr; <i>RTL</i> <i>Viewer</i>) to verify that all the connections have been made as you intended. Please note that large schematics may span several pages in the RTL Viewer. If that is the case, you can change pages in the top right corner of the RTL Viewer window.</li>
+<li class="li-enumerate">Demonstrate your working circuits to one of the TAs.</li>
+<li class="li-enumerate">Complete any experiments needed to answer the questions in the lab report section below.</li>
+</ol></dd><dt class="dt-description"><b>Lab Report:</b><b> (Part&nbsp;2)</b></dt><dd class="dd-description">[20 marks] to be done in groups</dd><dd class="dd-description"></dd><dd class="dd-description"><strong>Describe what you did in this lab</strong>, and include the code used and answer the following questions:</dd><dd class="dd-description"><ol class="enumerate" type="1">
+<li class="li-enumerate">What values did you use for the echo delay and the division factor?</li>
+<li class="li-enumerate">There are a limited number of multipliers on the Cyclone II FPGA. &nbsp;How can you redesign the filter to use less multiplier units?</li>
+<li class="li-enumerate">Open the compilation report in Quartus, and report the following numbers:</li>
+<li class="li-enumerate">Total number of logic elements used by your circuit,&nbsp;<span style="font-size: 11px;">total number of registers,&nbsp;</span><span style="font-size: 11px;">total number of pins, t</span><span style="font-size: 11px;">he maximum number of logic elements that can fit on the FPGA you used</span></li>
+<li class="li-enumerate">What is a logic element, and what are the components that make up a logic element on the Cyclone II FPGA?</li>
+<li class="li-enumerate">What is the purpose of the mutiplexors in the lab design?</li>
+<li class="li-enumerate">How many memory bits does it take to store the samples in the delay circuit (shift register) in your echo machine?</li>
+<li class="li-enumerate">Considering that each logic block contains only one register, would your design have fit onto the FPGA had you not used the memory-based shift register?</li>
+</ol></dd></dl><!--CUT END -->
+<p></p>
+<!--HTMLFOOT-->
+<p></p>
+<!--ENDHTML-->
+<p></p>
+<!--FOOTER--><hr size="2" />
+<blockquote class="quote"><i>This document was translated from L<sup>A</sup>T<sub>E</sub>X by </i><a href="http://hevea.inria.fr/index.html"><i>H</i><i><span style="font-size: 10pt;"><sup>E</sup></span></i><i>V</i><i><span style="font-size: 10pt;"><sup>E</sup></span></i><i>A</i></a><i>.</i></blockquote>
+</body>
+</html>

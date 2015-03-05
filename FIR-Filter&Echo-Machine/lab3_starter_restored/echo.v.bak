@@ -1,0 +1,3 @@
+module echo (
+				input [15:0] input_signal
+				output [15:0] output_signal);
